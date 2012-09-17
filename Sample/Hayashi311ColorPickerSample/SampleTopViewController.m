@@ -122,6 +122,7 @@
 
 #if !__has_feature(objc_arc)
 - (void)dealloc{
+    [hexColorLabel release];
     [super dealloc];
 }
 #endif
