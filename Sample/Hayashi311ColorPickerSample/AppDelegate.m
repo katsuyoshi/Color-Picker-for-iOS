@@ -33,21 +33,29 @@
 
 @synthesize window = _window;
 
+#if !__has_feature(objc_arc)
 - (void)dealloc
 {
     [_window release];
     [super dealloc];
 }
+#endif
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+#if __has_feature(objc_arc)
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+#else
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+#endif
     
     // テンプレートからの変更点↓
     SampleTopViewController* sampleTopViewController = [[SampleTopViewController alloc] init];
     navigationController = [[UINavigationController alloc] initWithRootViewController:sampleTopViewController];
     
+#if !__has_feature(objc_arc)
     [sampleTopViewController release];
+#endif
     [self.window addSubview:navigationController.view];
     
     // テンプレートからの変更点↑

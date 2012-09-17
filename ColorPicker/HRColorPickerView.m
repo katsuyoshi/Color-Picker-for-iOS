@@ -478,10 +478,14 @@
 
 
 - (void)dealloc{
+#if __has_feature(objc_arc)
+    CGImageRelease(_brightnessPickerShadowImage);
+#else
     [_brightnessCursor release];
     [_colorCursor release];
     CGImageRelease(_brightnessPickerShadowImage);
     [super dealloc];
+#endif
 }
 
 @end

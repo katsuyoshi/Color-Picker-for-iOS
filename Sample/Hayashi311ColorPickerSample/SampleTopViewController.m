@@ -120,9 +120,11 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+#if !__has_feature(objc_arc)
 - (void)dealloc{
     [super dealloc];
 }
+#endif
 
 #pragma mark - Hayashi311ColorPickerDelegate
 

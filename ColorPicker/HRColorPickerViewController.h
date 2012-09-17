@@ -42,7 +42,11 @@ typedef enum {
 } HCPCSaveStyle;
 
 @interface HRColorPickerViewController : UIViewController {
+#if __has_feature(objc_arc)
+    id<HRColorPickerViewControllerDelegate> __weak delegate;
+#else
     id<HRColorPickerViewControllerDelegate> delegate;
+#endif
     HRColorPickerView* colorPickerView;
     
     UIColor *_color;
@@ -70,7 +74,11 @@ typedef enum {
 - (void)cancel:(id)sender;
 
 
+#if __has_feature(objc_arc)
+@property (weak) id<HRColorPickerViewControllerDelegate> delegate;
+#else
 @property (assign) id<HRColorPickerViewControllerDelegate> delegate;
+#endif
 
 
 @end

@@ -35,22 +35,38 @@
 
 + (HRColorPickerViewController *)colorPickerViewControllerWithColor:(UIColor *)color
 {
+#if __has_feature(objc_arc)
+    return [[HRColorPickerViewController alloc] initWithColor:color fullColor:NO saveStyle:HCPCSaveStyleSaveAlways];
+#else
     return [[[HRColorPickerViewController alloc] initWithColor:color fullColor:NO saveStyle:HCPCSaveStyleSaveAlways] autorelease];
+#endif
 }
 
 + (HRColorPickerViewController *)cancelableColorPickerViewControllerWithColor:(UIColor *)color
 {
+#if __has_feature(objc_arc)
+    return [[HRColorPickerViewController alloc] initWithColor:color fullColor:NO saveStyle:HCPCSaveStyleSaveAndCancel];
+#else
     return [[[HRColorPickerViewController alloc] initWithColor:color fullColor:NO saveStyle:HCPCSaveStyleSaveAndCancel] autorelease];
+#endif
 }
 
 + (HRColorPickerViewController *)fullColorPickerViewControllerWithColor:(UIColor *)color
 {
+#if __has_feature(objc_arc)
+    return [[HRColorPickerViewController alloc] initWithColor:color fullColor:YES saveStyle:HCPCSaveStyleSaveAlways];
+#else
     return [[[HRColorPickerViewController alloc] initWithColor:color fullColor:YES saveStyle:HCPCSaveStyleSaveAlways] autorelease];
+#endif
 }
 
 + (HRColorPickerViewController *)cancelableFullColorPickerViewControllerWithColor:(UIColor *)color
 {
+#if __has_feature(objc_arc)
+    return [[HRColorPickerViewController alloc] initWithColor:color fullColor:YES saveStyle:HCPCSaveStyleSaveAndCancel];
+#else
     return [[[HRColorPickerViewController alloc] initWithColor:color fullColor:YES saveStyle:HCPCSaveStyleSaveAndCancel] autorelease];
+#endif
 }
 
 
@@ -65,7 +81,11 @@
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
+#if __has_feature(objc_arc)
+        _color = defaultColor;
+#else
         _color = [defaultColor retain];
+#endif
         _fullColor = fullColor;
         _saveStyle = saveStyle;
     }
@@ -93,11 +113,19 @@
     if (_saveStyle == HCPCSaveStyleSaveAndCancel) {
         UIBarButtonItem *buttonItem;
         
+#if __has_feature(objc_arc)
+        buttonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
+        self.navigationItem.leftBarButtonItem = buttonItem;
+        
+        buttonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(save:)];
+        self.navigationItem.rightBarButtonItem = buttonItem;
+#else
         buttonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)] autorelease];
         self.navigationItem.leftBarButtonItem = buttonItem;
         
         buttonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(save:)] autorelease];
         self.navigationItem.rightBarButtonItem = buttonItem;
+#endif
     }
 }
 
@@ -167,9 +195,11 @@
     /////////////////////////////////////////////////////////////////////////////
     
     [colorPickerView BeforeDealloc];
+#if !__has_feature(objc_arc)
     [colorPickerView release];
     [_color release];
     [super dealloc];
+#endif
 }
 
 @end
