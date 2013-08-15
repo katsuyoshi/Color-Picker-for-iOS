@@ -109,10 +109,8 @@
     if (CGRectEqualToRect(_frame, CGRectZero) == NO) {
         CGSize size = [HRColorPickerView sizeWithStyle:style];
         CGFloat height = _frame.size.height; // - 44 - style.headerHeight;
-        if (size.height > height) {
-            style.colorMapSizeHeight -= (size.height - height) / style.colorMapTileSize;
-        }
-        frame.size = [HRColorPickerView sizeWithStyle:style];
+        style.colorMapSizeHeight = (height - style.headerHeight)/style.colorMapTileSize;
+        frame = _frame;
     }
     frame.size.height -= 44.f;
     
@@ -121,15 +119,6 @@
     HRRGBColor rgbColor;
     RGBColorFromUIColor(_color, &rgbColor);
   
-/* DELETEME:
-    HRColorPickerStyle style;
-    if (_fullColor) {
-        style = [HRColorPickerView fitScreenFullColorStyle];
-    }else{
-        style = [HRColorPickerView fitScreenStyle];
-    }
-*/
-    
     colorPickerView = [[HRColorPickerView alloc] initWithStyle:style defaultColor:rgbColor];
     
     [self.view addSubview:colorPickerView];
