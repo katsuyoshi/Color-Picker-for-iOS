@@ -128,7 +128,9 @@
         HRRGBColor rgbColor = [colorPickerView RGBColor];
         [self.delegate setSelectedColor:[UIColor colorWithRed:rgbColor.r green:rgbColor.g blue:rgbColor.b alpha:1.0f]];
     }
-    [self.navigationController popViewControllerAnimated:YES];
+    if (_saveStyle == HCPCSaveStyleSaveAndCancel) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void)save:(id)sender
