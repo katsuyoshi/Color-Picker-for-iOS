@@ -45,11 +45,20 @@ typedef enum {
 @interface HRColorPickerViewController : UIViewController {
     id<HRColorPickerViewControllerDelegate> __weak delegate;
     HRColorPickerView* colorPickerView;
-    
+  
+    CGRect _frame;
     UIColor *_color;
     BOOL _fullColor;
     HCPCSaveStyle _saveStyle;
 }
+
+// It enables you to fit specific frame.
+// HRColorPickerView is designed for iPhone. If you use it on iPad, it would be useful.
+// TODO: It must use auto layout.
++ (HRColorPickerViewController *)colorPickerViewControllerWithFrame:(CGRect)frame color:(UIColor *)color;
++ (HRColorPickerViewController *)cancelableColorPickerViewControllerWithFrame:(CGRect)frame color:(UIColor *)color;
++ (HRColorPickerViewController *)fullColorPickerViewControllerWithFrame:(CGRect)frame color:(UIColor *)color;
++ (HRColorPickerViewController *)cancelableFullColorPickerViewControllerWithFrame:(CGRect)frame color:(UIColor *)color;
 
 + (HRColorPickerViewController *)colorPickerViewControllerWithColor:(UIColor *)color;
 + (HRColorPickerViewController *)cancelableColorPickerViewControllerWithColor:(UIColor *)color;
@@ -57,11 +66,15 @@ typedef enum {
 + (HRColorPickerViewController *)cancelableFullColorPickerViewControllerWithColor:(UIColor *)color;
 
 /** Initialize controller with selected color. 
+ * @frame view frame
  * @param defaultColor selected color
  * @param fullColor If YES, browseable full color. If NO color was limited.
  * @param saveStyle If it's HCPCSaveStyleSaveAlways, save color when self is closing. If it's HCPCSaveStyleSaveAndCancel, shows Cancel and Save button.
  */
+- (id)initWithFrame:(CGRect)frame color:(UIColor*)defaultColor fullColor:(BOOL)fullColor saveStyle:(HCPCSaveStyle)saveStyle;
+
 - (id)initWithColor:(UIColor*)defaultColor fullColor:(BOOL)fullColor saveStyle:(HCPCSaveStyle)saveStyle;
+
 
 /** @deprecated use -save: instead of this . */
 - (void)saveColor:(id)sender;

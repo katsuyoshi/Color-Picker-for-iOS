@@ -53,6 +53,13 @@
         controller = [HRColorPickerViewController cancelableFullColorPickerViewControllerWithColor:[self.view backgroundColor]];
         break;
 
+    case 4: {
+          CGRect frame = self.view.frame;
+          frame.size.height -= 50;
+          controller = [HRColorPickerViewController fullColorPickerViewControllerWithFrame:frame color:[self.view backgroundColor]];
+        }
+        break;
+
     default:
         return;
         break;
@@ -96,7 +103,7 @@
     
     self.title = @"Color Picker by Hayashi311";
     
-    NSString *titles[] = { @"Limited color ->", @"Limited color with Save button ->", @"Full color ->", @"Full color with Save button ->" };
+    NSString *titles[] = { @"Limited color ->", @"Limited color with Save button ->", @"Full color ->", @"Full color with Save button ->" , @"Full color with frame ->" };
     
     int i;
     for (i = 0; i < sizeof(titles) / sizeof(titles[0]); i++) {

@@ -33,6 +33,27 @@
 @synthesize delegate;
 
 
++ (HRColorPickerViewController *)colorPickerViewControllerWithFrame:(CGRect)frame color:(UIColor *)color
+{
+    return [[HRColorPickerViewController alloc] initWithFrame:frame color:color fullColor:NO saveStyle:HCPCSaveStyleSaveAlways];
+}
+
++ (HRColorPickerViewController *)cancelableColorPickerViewControllerWithFrame:(CGRect)frame color:(UIColor *)color
+{
+    return [[HRColorPickerViewController alloc] initWithFrame:frame color:color fullColor:NO saveStyle:HCPCSaveStyleSaveAndCancel];
+}
++ (HRColorPickerViewController *)fullColorPickerViewControllerWithFrame:(CGRect)frame color:(UIColor *)color
+{
+    return [[HRColorPickerViewController alloc] initWithFrame:frame color:color fullColor:YES saveStyle:HCPCSaveStyleSaveAlways];
+}
+
++ (HRColorPickerViewController *)cancelableFullColorPickerViewControllerWithFrame:(CGRect)frame color:(UIColor *)color
+{
+    return [[HRColorPickerViewController alloc] initWithFrame:frame color:color fullColor:YES saveStyle:HCPCSaveStyleSaveAndCancel];
+}
+
+
+
 + (HRColorPickerViewController *)colorPickerViewControllerWithColor:(UIColor *)color
 {
     return [[HRColorPickerViewController alloc] initWithColor:color fullColor:NO saveStyle:HCPCSaveStyleSaveAlways];
@@ -55,39 +76,59 @@
 
 
 
+
 - (id)initWithDefaultColor:(UIColor *)defaultColor
 {
     return [self initWithColor:defaultColor fullColor:NO saveStyle:HCPCSaveStyleSaveAlways];
 }
 
-- (id)initWithColor:(UIColor*)defaultColor fullColor:(BOOL)fullColor saveStyle:(HCPCSaveStyle)saveStyle
-
+- (id)initWithFrame:(CGRect)frame color:(UIColor*)defaultColor fullColor:(BOOL)fullColor saveStyle:(HCPCSaveStyle)saveStyle
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _color = defaultColor;
         _fullColor = fullColor;
         _saveStyle = saveStyle;
+        _frame = frame;
     }
     return self;
 }
 
+- (id)initWithColor:(UIColor*)defaultColor fullColor:(BOOL)fullColor saveStyle:(HCPCSaveStyle)saveStyle
+{
+    return [self initWithFrame:CGRectZero color:defaultColor fullColor:fullColor saveStyle:saveStyle];
+}
+
+
 - (void)loadView
 {
-    CGRect frame = [[UIScreen mainScreen] applicationFrame];
+    HRColorPickerStyle style = _fullColor ? [HRColorPickerView fullColorStyle] : [HRColorPickerView defaultStyle];
+    CGRect frame;
+    frame.origin = CGPointZero;
+    frame.size = [HRColorPickerView sizeWithStyle:style];
+    if (CGRectEqualToRect(_frame, CGRectZero) == NO) {
+        CGSize size = [HRColorPickerView sizeWithStyle:style];
+        CGFloat height = _frame.size.height; // - 44 - style.headerHeight;
+        if (size.height > height) {
+            style.colorMapSizeHeight -= (size.height - height) / style.colorMapTileSize;
+        }
+        frame.size = [HRColorPickerView sizeWithStyle:style];
+    }
     frame.size.height -= 44.f;
     
     self.view = [[UIView alloc] initWithFrame:frame];
     
     HRRGBColor rgbColor;
     RGBColorFromUIColor(_color, &rgbColor);
-    
+  
+/* DELETEME:
     HRColorPickerStyle style;
     if (_fullColor) {
         style = [HRColorPickerView fitScreenFullColorStyle];
     }else{
         style = [HRColorPickerView fitScreenStyle];
     }
+*/
     
     colorPickerView = [[HRColorPickerView alloc] initWithStyle:style defaultColor:rgbColor];
     
